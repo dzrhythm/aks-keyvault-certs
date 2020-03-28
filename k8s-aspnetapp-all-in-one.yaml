@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kvcreds
+type: azure/kv
+data:
+  clientid: YOUR BASE64 ENCODED CLIENT ID
+  clientsecret: YOUR BASE64 ENCODED CLIENT SECRET
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aks-keyvault-aspnetcore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aks-keyvault-aspnetcore-pod
+  template:
+    metadata:
+      labels:
+        app: aks-keyvault-aspnetcore-pod
+    spec:
+      containers:
+      - name: aks-keyvault-aspnetcore-pod
+        image: YOUR ACR.azurecr.io/aspnet-keyvault
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        env:
+        - name: HTTPS_CERTIFICATE_PATH
+          value: "/certs/https.pfx.base64"
+        volumeMounts:
+        - name: aks-keyvault-aspnetcore-httpscert
+          mountPath: /certs
+          readOnly: true          
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            memory: 500Mi
+            cpu: "0.5"
+      volumes:
+      - name: aks-keyvault-aspnetcore-httpscert
+        flexVolume:
+          driver: "azure/kv"
+          secretRef:
+            name: kvcreds
+          options:
+            keyvaultname: "YOUR KEY VAULT NAME"
+            keyvaultobjectnames: "aks-https"
+            keyvaultobjecttypes: secret
+            keyvaultobjectaliases: "https.pfx.base64"
+            tenantid: "YOUR KEY VAULT ID"            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aks-keyvault-aspnetcore-svc
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+  - name: https
+    port: 443
+  selector:
+    app: aks-keyvault-aspnetcore-pod
