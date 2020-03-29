@@ -1,6 +1,3 @@
-#
-# Requires the Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
-#
 
 $acrName = "YOUR ACR NAME"
 
@@ -8,7 +5,7 @@ $acrName = "YOUR ACR NAME"
 docker build -f Dockerfile -t aspnet-keyvault .
 
 # Login to azure and our Azure Container Registry
-az Login
+az login
 az acr login --name "$acrName"
 
 # Tag and push the image to the ACR

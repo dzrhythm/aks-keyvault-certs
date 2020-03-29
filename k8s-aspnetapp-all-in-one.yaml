@@ -1,12 +1,3 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: kvcreds
-type: azure/kv
-data:
-  clientid: YOUR BASE64 ENCODED CLIENT ID
-  clientsecret: YOUR BASE64 ENCODED CLIENT SECRET
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,7 +14,7 @@ spec:
     spec:
       containers:
       - name: aks-keyvault-aspnetcore-pod
-        image: YOUR ACR.azurecr.io/aspnet-keyvault
+        image: YOUR-ACR.azurecr.io/aspnet-keyvault
         ports:
         - name: http
           containerPort: 80
@@ -41,7 +32,7 @@ spec:
             cpu: 250m
           limits:
             memory: 500Mi
-            cpu: "0.5"
+            cpu: 1
       volumes:
       - name: aks-keyvault-aspnetcore-httpscert
         flexVolume:
@@ -50,10 +41,10 @@ spec:
             name: kvcreds
           options:
             keyvaultname: "YOUR KEY VAULT NAME"
+            tenantid: "YOUR KEY VAULT ID"            
             keyvaultobjectnames: "aks-https"
             keyvaultobjecttypes: secret
             keyvaultobjectaliases: "https.pfx.base64"
-            tenantid: "YOUR KEY VAULT ID"            
 ---
 apiVersion: v1
 kind: Service
