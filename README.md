@@ -32,10 +32,12 @@ These instructions assume you have basic knowledge about:
 - building and pushing Docker images
 - deploying simple applications to Azure Kubernetes Service.
 
-To run this sample in AKS:
+See [AKS-Deploy.ps1](AKS-Deploy.ps1) for example Azure CLI commands
+for most of these steps. To run this sample in AKS:
 
 1. Create a self-signed private key certificate, or use the one included in this repo:
    [aspnetapp\certs\localhost.pfx](aspnetapp\certs\localhost.pfx).
+   (Password: `abcdefghijklmnopqrstuvwxyz0123456789`).
 
 2. Create an [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/)
    in your subscription.
@@ -46,11 +48,9 @@ To run this sample in AKS:
 
 5. Build a Docker image of the app using the [Dockerfile](Dockerfile),
    then tag and push the image to your registry.
-   See [Docker-Build.ps1](Docker-Build.ps1) for example commands.
 
 6. Create an [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service/)
    cluster attached to your ACR.
-   See [AKS-Deploy.ps1](AKS-Deploy.ps1) for example Azure CLI commands.
 
 7. Create an [app registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
    in Azure Active Directory (AAD) to use as a service principal. Get the client ID,
@@ -93,5 +93,4 @@ To run this sample in AKS:
 ## Notes
 
 The [aspnetapp/certs](aspnetapp/certs) folder has self-signed localhost certificates for
-development and testing. Password for the localhost.pfx cert in this sample is: `abcdefghijklmnopqrstuvwxyz0123456789`. Of course these are not meant for
-production use :-).
+development and testing. Of course these are not meant for production use :-).

@@ -1,3 +1,8 @@
+# Commands for setting up required resources in Azure and AKS
+# Update the variables for your environment.
+# To run lines individually in a PowerShell integrated termainal
+# in VS Code, place the cursor on the line and press F8.
+
 $resourceGroup = "YOUR RESOURCE GROUP"
 $location =      "EastUS"
 $aksName =       "YOUR AKS NAME"
@@ -13,24 +18,28 @@ az group create --name "$resourceGroup" --location "$location"
 
 # ACR
 az acr create --resource-group "$resourceGroup" --name "$acrName" --sku Basic
-
 az acr login --name "$acrName"
 
+# Docker build
+docker build -f Dockerfile -t aspnet-keyvault .
 
-# Key Vault permissions
+# Tag and push the image to the ACR
+docker tag aspnet-keyvault "$acrName.azurecr.io/aspnet-keyvault"
+docker push "$acrName.azurecr.io/aspnet-keyvault"
 
-az keyvault set-policy -n "$keyVaultName" --secret-permissions get --spn "$appClientID"
+# Key Vault
+az keyvault create --name "$keyVaultName" --resource-group "$resourceGroup"
+az keyvault set-policy -n "$keyVaultName" --secret-permissions get --spn "$clientID"
+# (import the PFX as per the README.md)
 
 # AKS
 az aks create --resource-group "$resourceGroup" --name "$aksName" --node-count 2 --generate-ssh-keys --attach-acr "$acrName"
-
 az aks get-credentials --resource-group "$resourceGroup" --name "$aksName"
-
 kubectl create -f https://raw.githubusercontent.com/Azure/kubernetes-keyvault-flexvol/master/deployment/kv-flexvol-installer.yaml
-
 kubectl create secret generic kvcreds --from-literal "clientid=$clientID" --from-literal "clientsecret=$clientSecret" --type=azure/kv
-
 kubectl apply -f k8s-aspnetapp-all-in-one.yaml
+kubectl get pods
+kubectl get services
 
 # delete everything when done
 #az aks delete --name "$aksName" --resource-group "$resourceGroup" --yes --no-wait
