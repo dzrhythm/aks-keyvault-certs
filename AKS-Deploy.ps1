@@ -28,7 +28,6 @@ docker tag aspnet-keyvault "$acrName.azurecr.io/aspnet-keyvault"
 docker push "$acrName.azurecr.io/aspnet-keyvault"
 
 # Key Vault
-az keyvault create --name "$keyVaultName" --resource-group "$resourceGroup"
 az keyvault set-policy -n "$keyVaultName" --secret-permissions get --spn "$clientID"
 # (import the PFX as per the README.md)
 
