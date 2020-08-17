@@ -21,12 +21,15 @@ spec:
         - name: https
           containerPort: 443
         env:
+        # Set an environment var to the cert path for
+        # the application to use.
         - name: HTTPS_CERTIFICATE_PATH
           value: "/certs/https.pfx.base64"
         volumeMounts:
+        # Mount the key vault volume to /certs
         - name: aks-keyvault-aspnetcore-httpscert
           mountPath: /certs
-          readOnly: true          
+          readOnly: true
         resources:
           requests:
             cpu: 250m
@@ -40,10 +43,15 @@ spec:
           secretRef:
             name: kvcreds
           options:
+            # update with your key vault name
             keyvaultname: "YOUR KEY VAULT NAME"
-            tenantid: "YOUR KEY VAULT ID"            
+            # update with your AAD tenant
+            tenantid: "YOUR KEY VAULT TENANT"
+            # The name of the object in Key Vault
             keyvaultobjectnames: "aks-https"
+            # Use "secret" to get the full cert
             keyvaultobjecttypes: secret
+            # This becomes the file name on the mount.
             keyvaultobjectaliases: "https.pfx.base64"
 ---
 apiVersion: v1
