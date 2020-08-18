@@ -11,10 +11,10 @@ This code is for demonstration purposes only and is not intended for production.
 
 ## Requirements
 
-- .NET Core 3.1
-- Docker
+- [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+- [Docker](https://docs.docker.com/get-docker/)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
-- A Microsoft Azure account.
+- A [Microsoft Azure](https://azure.microsoft.com/) account.
 - Recommended: [Visual Studio Code](https://code.visualstudio.com/)
   with the Docker and Kubernetes extensions.
 
@@ -61,7 +61,8 @@ for most of these steps. To run this sample in AKS:
 
 9. Edit the [k8s-aspnetapp-all-in-one.yaml](k8s-aspnetapp-all-in-one.yaml) file:
    - Update the Deployment section with the registry path to your Docker `image`.
-   - Update the Deployment section with the name and id of your Key Vault in the
+   - Update the Deployment section with the name of your Key Vault and
+     Azure Active Directory tenant ("Directory ID" on the Key Vault page in the portal) in the
      `keyvaultname` and `tenantid` under the volumes configuration.
 
 10. In a terminal get credentials to your cluster with `az aks get-credentials`.
@@ -87,8 +88,8 @@ for most of these steps. To run this sample in AKS:
 
     `kubectl get service aks-keyvault-aspnetcore-svc`
 
-    Get the EXTERNAL-IP and browse to it using https://YOUR-IP
-    (you may need to bypass the warning about the self-signed cert).
+    Get the EXTERNAL-IP value and browse to it using <https://YOUR-IP>
+    (you'll likely need to bypass the browser warning about the self-signed cert).
 
 ## Notes
 
