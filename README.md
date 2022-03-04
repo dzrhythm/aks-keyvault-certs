@@ -1,4 +1,9 @@
-# aks-keyvault-certs
+# [DEPRECATED] aks-keyvault-certs
+
+WARNING ⚠️ This repo has been deprecated since the FlexVolume driver has also been deprecated.
+Please see [aks-csi-keyvault-certs](https://github.com/dzrhythm/aks-csi-keyvault-certs) instead.
+
+------------------------------------------------------------------------------------------------
 
 Sample for using Azure Key Vault for mounting certificates in containers running
 in Kubernetes, via the
